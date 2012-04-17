@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>APIs Need To Be Like ORMs</title>
+
+    <meta name="description" content="To make an API usable for a consumer, it should be thought of as an across-the-wire ORM. That means when designing an API, it's worth looking at the common features of ORMs and seeing where they can be sensibly implemented.">
+    <meta name="author" content="Gabriel Hurley">
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <!-- Core and extension CSS files -->
+    <link rel="stylesheet" href="../../deck.js/core/deck.core.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/goto/deck.goto.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/menu/deck.menu.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/navigation/deck.navigation.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/status/deck.status.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/hash/deck.hash.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/scale/deck.scale.css">
+
+    <!-- Style theme. More available in /themes/style/ or create your own. -->
+    <link rel="stylesheet" href="../openstack.theme.css">
+
+    <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+    <link rel="stylesheet" href="../../deck.js/themes/transition/horizontal-slide.css">
+
+    <script src="../../deck.js/modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<!-- Begin slides -->
+<section class="slide" id="title-slide">
+    <h1>APIs Need To Be Like ORMs</h1>
+    <h2>Gabriel Hurley</h2>
+</section>
+
+<section class="slide" id="why">
+    <h2>Why?</h2>
+    <p class="slide">To make an API <strong>usable for a consumer</strong>, it should be thought of as <strong>an across-the-wire ORM</strong>.</p>
+    <p class="slide">That means <strong>when you design an API</strong>:</p>
+    <ul>
+        <li class="slide">think about the <strong>common features of ORMs</strong>,</li>
+        <li class="slide"><strong>implement them</strong> (<em>if they're not unreasonable</em>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="the-good">
+    <h2>What's good (and reliable)</h2>
+    <ul>
+        <li>
+            <pre>get(<em>id="foo"</em>)</pre>
+            <p class="slide">Probably the most reliable API method.</p>
+        </li>
+        <li>
+            <pre>list()</pre>
+            <p class="slide">Fetches all the data, but it still needs to do more...
+        </li>
+        <li>
+            <pre>limit=<em>n</em></pre>
+            <p class="slide">The only consistent (and consistently useful) query parameter.</p>
+        </li>
+    </ul>
+</section>
+
+<section class="slide" id="the-meh">
+    <h2>What's better than nothing... ("meh")</h2>
+    <div class="slide" id="marker-pagination">
+        <h3><strong>marker-based pagination</strong></h3>
+        <p>why it's not great:</p>
+        <ul>
+            <li>can't get to a previous page</li>
+            <li>can't easily jump around without knowing all data</li>
+        </ul>
+    </div>
+    <div class="slide" id="name-based-filtering">
+        <h3><strong>name-based filtering (swift only)</strong></h3>
+        <p>why it's not great:</p>
+        <ul>
+            <li>only filters on name</li>
+            <li>only implemented by swift</li>
+        </ul>
+    </div>
+</section>
+
+<section class="slide" id="what-we-need">
+    <h1>What We Need!</h1>
+</section>
+
+<section class="slide" id="filtering-everywhere">
+    <h2>Filtering (everywhere)</h2>
+    <div class="slide">
+        <h3>What?</h3>
+        <p>Filter on name, metadata, tags, etc.</p>
+        <p>Support for datatypes beyond text (<strong>esp. date/time</strong>)</p>
+    </div>
+    <div class="slide">
+        <h3>Why?</h3>
+        <p>Basic search, making information <strong>discoverable</strong></p>
+    </div>
+    <div class="slide">
+        <h3>Why don't we already have it?</h3>
+    <p>Tricky to implement efficiently with a reasonable API</p>
+    </div>
+    <div class="slide">
+        <h3>What can we do about it?</h3>
+        <p>Suck it up</p>
+    </div>
+</section>
+
+<section class="slide" id="offset-pagination">
+    <h2>Offset-based pagination</h2>
+    <div class="slide">
+        <h3>Why?</h3>
+        <p>Ability to go to the <strong>previous page</strong>, <strong>page X of Y</strong>, <strong>jump to page X</strong>, etc.</p>
+    </div>
+    <div class="slide">
+        <h3>Why don't we already have it?</h3>
+        <p>Arguments against it tend to center around the fact that things may change between requests and feel "inconsistent".</p>
+    </div>
+    <div class="slide">
+        <h3>What can we do about it?</h3>
+        <p>It's <strong>a tiny price to pay for a tremendously useful function</strong>.</p>
+    </div>
+    <div class="slide">
+        <h3>Examples</h3>
+        <p>Google APIs, Twitter APIs, Facebook APIs, and every other data API that people use all the effing time.</p>
+    </div>
+</section>
+
+<section class="slide" id="ordering">
+    <h2>Ordering</h2>
+    <div class="slide">
+        <h3>Why?</h3>
+        <p>Date-based ordering combined with filters, e.g. give me all instances created after X timestamp.</p>
+    </div>
+    <div class="slide">
+        <h3>Why don't we already have it?</h3>
+        <p>???</p>
+    </div>
+</section>
+
+<section class="slide" id="bulk-retrieval">
+    <h2>Bulk-retrieval</h2>
+    <div class="slide">
+        <h3>What?</h3>
+        <p>Ability to request multiple specific IDs and receive a key/value map of IDs to data.</p>
+    </div>
+    <div class="slide">
+        <h3>Example</h3>
+        <pre><code>
+            >>> client.instances.in_bulk(id__in=["foo", "bar", ...])
+            ... {'foo': {'id': 'foo', 'flavor': ...}
+                 'bar': {'id': 'bar', 'flavor': ...}}
+        </code></pre>
+    </div>
+    <div class="slide">
+        <h3>Why?</h3>
+        <p>Retrieving related data for a set of resources (e.g. flavor data for a set of instances)</p>
+    </div>
+    <div class="slide">
+        <h3>Why don't we already have it?</h3>
+        <p>???</p>
+    </div>
+</section>
+
+<section class="slide" id="closing">
+    <h2>In closing</h2>
+    <ul>
+        <li class="slide"><strong>Be consistent</strong> (across the ecosystem).</li>
+        <li class="slide">Send all the common data your consumers will need...</li>
+        <li class="slide">or else allow the user to request the data they need.</li>
+        <li class="slide">Don't assume that just because you don't have a use for a feature, no one else does.</li>
+        <li class="slide">Let's make this code common so we don't have to rewrite these methods for every project.</li>
+    </ul>
+    <h3 class="slide"><center><strong>Thank you!</strong></center></h3>
+</section>
+
+
+<!-- deck.navigation snippet -->
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<!-- deck.status snippet -->
+<p class="deck-status">
+    <span class="deck-status-current"></span>
+    /
+    <span class="deck-status-total"></span>
+</p>
+
+<!-- deck.goto snippet -->
+<form action="." method="get" class="goto-form">
+    <label for="goto-slide">Go to slide:</label>
+    <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+    <datalist id="goto-datalist"></datalist>
+    <input type="submit" value="Go">
+</form>
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+<!-- Grab CDN jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="../../deck.js/jquery-1.7.min.js"></script>
+
+<!-- Deck Core and extensions -->
+<script src="../../deck.js/core/deck.core.js"></script>
+<script src="../../deck.js/extensions/hash/deck.hash.js"></script>
+<script src="../../deck.js/extensions/menu/deck.menu.js"></script>
+<script src="../../deck.js/extensions/goto/deck.goto.js"></script>
+<script src="../../deck.js/extensions/status/deck.status.js"></script>
+<script src="../../deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="../../deck.js/extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck -->
+<script>
+$(function() {
+    $.deck('.slide');
+});
+</script>
+
+</body>
+</html>
