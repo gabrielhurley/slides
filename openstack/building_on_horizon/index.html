@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>APIs Need To Be Like ORMs</title>
+
+    <meta name="description" content="To make an API usable for a consumer, it should be thought of as an across-the-wire ORM. That means when designing an API, it's worth looking at the common features of ORMs and seeing where they can be sensibly implemented.">
+    <meta name="author" content="Gabriel Hurley">
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <!-- Core and extension CSS files -->
+    <link rel="stylesheet" href="../../deck.js/core/deck.core.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/goto/deck.goto.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/menu/deck.menu.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/navigation/deck.navigation.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/status/deck.status.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/hash/deck.hash.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/scale/deck.scale.css">
+
+    <!-- Style theme. More available in /themes/style/ or create your own. -->
+    <link rel="stylesheet" href="../openstack.theme.css">
+
+    <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+    <link rel="stylesheet" href="../../deck.js/themes/transition/horizontal-slide.css">
+
+    <script src="../../deck.js/modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<!-- Begin slides -->
+<section class="slide" id="title-slide">
+    <h1>Building on Horizon</h1>
+    <h2>Gabriel Hurley</h2>
+</section>
+
+<div class="slide" id="building-on-horizon">
+    <h2>Building on Horizon</h2>
+    <h3>What are we gonna cover?</h3>
+    <ul>
+        <li class="slide">Dashboards</li>
+        <li class="slide">Panels</li>
+        <li class="slide">Tables</li>
+        <li class="slide">Tabs</li>
+        <li class="slide">Settings</li>
+        <li class="slide">Overrides</li>
+        <li class="slide">Oh My!</li>
+    </ul>
+
+    <p class="slide"><small>You can find a reference implementation of the code being described here
+    on github at <a class="reference external" href="https://github.com/gabrielhurley/horizon_demo">https://github.com/gabrielhurley/horizon_demo</a>.</small></p>
+</div>
+
+<div class="slide" id="creating-a-dashboard">
+<h2>Creating a dashboard</h2>
+    <div class="slide">
+        <p class="strong">Note</p>
+        <p class="last">It's perfectly valid to create a panel without a dashboard.</p>
+        <p>We'll talk about how later.</p>
+    </div>
+</div>
+
+<div class="slide" id="structure">
+    <h2>Structure</h2>
+    <p>Follows the typical Django application layout.</p>
+<div class="highlight-python slide">
+<pre>
+visualizations
+  |--__init__.py
+  |--dashboard.py
+  |--templates/
+  |--static/
+</pre>
+</div>
+<div class="slide">
+    <p>The <tt class="docutils literal"><span class="pre">dashboard.py</span></tt> module will contain our dashboard class for use by Horizon; the <tt class="docutils literal"><span class="pre">templates</span></tt> and <tt class="docutils literal"><span class="pre">static</span></tt> directories give us homes for our Django template files and static media respectively.</p>
+</div>
+</div>
+<div class="slide">
+    <h2>Inside static and templates</h2>
+    <p>Within the <tt class="docutils literal"><span class="pre">static</span></tt> and <tt class="docutils literal"><span class="pre">templates</span></tt> directories it&#8217;s generally good to namespace your files:</p>
+    <div class="highlight-python"><pre>templates/
+      |--visualizations/
+    static/
+      |--visualizations/
+         |--css/
+         |--js/
+         |--img/</pre>
+    </div>
+</div>
+
+<div class="slide" id="defining-a-dashboard">
+    <h2>Defining a dashboard</h2>
+    <div class="slide">
+        <p>A dashboard class can be incredibly simple (about 3 lines at minimum),
+        defining nothing more than a name and a slug:</p>
+        <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">horizon</span>
+
+        <span class="k">class</span> <span class="nc">VizDash</span><span class="p">(</span><span class="n">horizon</span><span class="o">.</span><span class="n">Dashboard</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Visualizations&quot;</span><span class="p">)</span>
+            <span class="n">slug</span> <span class="o">=</span> <span class="s">&quot;visualizations&quot;</span>
+        </pre></div>
+        </div>
+    </div>
+    <div class="slide">
+        <p>In practice, a dashboard class will usually contain more information...</p>
+        <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">VizDash</span><span class="p">(</span><span class="n">horizon</span><span class="o">.</span><span class="n">Dashboard</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Visualizations&quot;</span><span class="p">)</span>
+            <span class="n">slug</span> <span class="o">=</span> <span class="s">&quot;visualizations&quot;</span>
+            <span class="n">panels</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;flocking&#39;</span><span class="p">,)</span>
+            <span class="n">default_panel</span> <span class="o">=</span> <span class="s">&#39;flocking&#39;</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;admin&#39;</span><span class="p">,)</span>
+        </pre></div>
+        </div>
+    </div>
+</div>
+<div class="slide">
+    <h2>Registering a dashboard</h2>
+    <p>Once our dashboard class is complete, all we need to do is register it:</p>
+    <div class="highlight-python"><div class="highlight"><pre><span class="n">horizon</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">VizDash</span><span class="p">)</span></pre></div>
+    </div>
+    <p class="slide">The typical place for that would be the bottom of the <tt class="docutils literal"><span class="pre">dashboard.py</span></tt> file, but it could also go elsewhere.</p>
+</div>
+
+
+<div class="slide" id="creating-a-panel">
+    <h2>Creating a panel</h2>
+    <p>You don't always need a dashboard to create a panel, but when you do, you'd better drink Dos Equis.</p>
+</div>
+<div class="slide" id="panel-structure">
+<h2>Structure</h2>
+<div class="slide">
+<p>Without a dashboard</p><pre>
+flocking/
+  |--__init__.py
+  |--panel.py
+  |--urls.py
+  |--views.py
+  |--templates/
+     |--flocking/
+        |--index.html
+</pre>
+</div>
+<div class="slide">
+<p>With a dashboard</p>
+<pre>
+visualizations/
+|--__init__.py
+|--dashboard.py
+|--flocking/
+   |--__init__.py
+   |--panel.py
+   |--urls.py
+   |--views.py
+|--templates/
+   |--visualizations/
+      |--flocking/
+         |--index.html</pre>
+</div>
+</div>
+
+<div class="slide" id="defining-a-panel">
+    <h2>Defining a panel</h2>
+    <p>The <tt class="docutils literal"><span class="pre">panel.py</span></tt> file has a special meaning.</p>
+
+    <div class="slide">
+        <p>Inside the <tt class="docutils literal"><span class="pre">panel.py</span></tt> module we define our <tt class="docutils literal"><span class="pre">Panel</span></tt> class:</p>
+        <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Flocking</span><span class="p">(</span><span class="n">horizon</span><span class="o">.</span><span class="n">Panel</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Flocking&quot;</span><span class="p">)</span>
+            <span class="n">slug</span> <span class="o">=</span> <span class="s">&#39;flocking&#39;</span>
+        </pre></div>
+        </div>
+        <p>Simple, right?</p>
+    </div>
+    <div class="slide">
+        <p>Once we&#8217;ve defined it, we register it with the dashboard:</p>
+        <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">visualizations</span> <span class="kn">import</span> <span class="n">dashboard</span>
+
+        <span class="n">dashboard</span><span class="o">.</span><span class="n">VizDash</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Flocking</span><span class="p">)</span>
+        </pre></div>
+        </div>
+    </div>
+</div>
+
+<div class="slide" id="urls">
+    <h2>URLs</h2>
+    <p>You need a <tt class="docutils literal"><span class="pre">urls.py</span></tt> file in your panel directory with a view named
+    <tt class="docutils literal"><span class="pre">index</span></tt>:</p>
+    <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">url</span>
+    <span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">IndexView</span>
+
+    <span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">IndexView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;index&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+    </pre></div>
+    </div>
+</div>
+
+<div class="slide" id="tables-tabs-and-views">
+    <h2>Tables, Tabs, and Views</h2>
+    <p>Now we get to the really exciting parts; everything before this was structural.</p>
+</div>
+
+<div class="slide" id="defining-a-table">
+<h2>Defining a table</h2>
+<p>In a <tt class="docutils literal"><span class="pre">tables.py</span></tt> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">horizon</span> <span class="kn">import</span> <span class="n">tables</span>
+
+<div class="slide">
+<span class="k">class</span> <span class="nc">FlockingInstancesTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">DataTable</span><span class="p">):</span></div><div class="slide">
+    <span class="n">host</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&quot;OS-EXT-SRV-ATTR:host&quot;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Host&quot;</span><span class="p">))</span>
+    <span class="n">tenant</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&#39;tenant_name&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Tenant&quot;</span><span class="p">))</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&#39;user_name&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">))</span>
+    <span class="n">vcpus</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&#39;flavor_vcpus&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;VCPUs&quot;</span><span class="p">))</span>
+    <span class="n">memory</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&#39;flavor_memory&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Memory&quot;</span><span class="p">))</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s">&#39;age&#39;</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Age&quot;</span><span class="p">))</span></div>
+<div class="slide">
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;instances&quot;</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Instances&quot;</span><span class="p">)</span></div>
+</pre></div>
+</div>
+
+</div>
+<div class="slide" id="defining-tabs">
+    <h2>Defining tabs</h2>
+    <p>We have a table, now what...</p>
+    <div class="slide">
+        <p>Let&#8217;s make a tab for our visualization:</p>
+    </div>
+    <div class="slide">
+        <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">VizTab</span><span class="p">(</span><span class="n">tabs</span><span class="o">.</span><span class="n">Tab</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Visualization&quot;</span><span class="p">)</span>
+            <span class="n">slug</span> <span class="o">=</span> <span class="s">&quot;viz&quot;</span>
+            <span class="n">template_name</span> <span class="o">=</span> <span class="s">&quot;visualizations/flocking/_flocking.html&quot;</span>
+
+            <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">None</span>
+        </pre></div>
+        </div>
+    </div>
+</div>
+<div class="slide" id="tab-data-table">
+    <h2>More tabs...</h2>
+    <div class="slide">
+    <p>We also need a tab for our data table:</p>
+    <div class="slide">
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">.tables</span> <span class="kn">import</span> <span class="n">FlockingInstancesTable</span>
+
+<span class="k">class</span> <span class="nc">DataTab</span><span class="p">(</span><span class="n">tabs</span><span class="o">.</span><span class="n">TableTab</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Data&quot;</span><span class="p">)</span>
+    <span class="n">slug</span> <span class="o">=</span> <span class="s">&quot;data&quot;</span>
+    <span class="n">table_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FlockingInstancesTable</span><span class="p">,)</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s">&quot;horizon/common/_detail_table.html&quot;</span>
+    <span class="n">preload</span> <span class="o">=</span> <span class="bp">False</span>
+    <div class="slide">
+    <span class="k">def</span> <span class="nf">get_instances_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_instances_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_group</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">exceptions</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tab_group</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                              <span class="n">_</span><span class="p">(</span><span class="s">&#39;Unable to retrieve instance list.&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">instances</span></div>
+</pre></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="slide" id="tying-it-together-in-a-view">
+    <h2>Tying it together in a view</h2>
+    <div class="slide">
+        <p>We want to handle both tabs and tables... There's a view for that.</p>
+    </div>
+    <div class="slide">
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">.tables</span> <span class="kn">import</span> <span class="n">FlockingInstancesTable</span>
+<span class="kn">from</span> <span class="nn">.tabs</span> <span class="kn">import</span> <span class="n">FlockingTabs</span>
+
+<span class="k">class</span> <span class="nc">IndexView</span><span class="p">(</span><span class="n">tabs</span><span class="o">.</span><span class="n">TabbedTableView</span><span class="p">):</span>
+    <span class="n">tab_group_class</span> <span class="o">=</span> <span class="n">FlockingTabs</span>
+    <span class="n">table_class</span> <span class="o">=</span> <span class="n">FlockingInstancesTable</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s">&#39;visualizations/flocking/index.html&#39;</span>
+</pre></div></div>
+</div>
+</div>
+
+<div class="slide" id="setting-up-a-project">
+<h2>Setting up a project</h2>
+<p>The vast majority of people will just customize the OpenStack Dashboard
+example project that ships with Horizon.</p>
+</div>
+<div class="slide" id="id2">
+    <h2>Structure</h2>
+    <p>A site built on Horizon takes the form of a very typical Django project:</p>
+<div class="slide">
+<div class="highlight-python"><pre>site/
+  |--__init__.py
+  |--manage.py
+  |--demo_dashboard/
+     |--__init__.py
+     |--models.py  # required for Django even if unused
+     |--settings.py
+     |--templates/
+     |--static/</pre>
+</div>
+</div>
+<div class="slide">
+    <p>The key bits here are that <tt class="docutils literal"><span class="pre">demo_dashboard</span></tt> is on our python path, and that
+    the <cite>settings.py`</cite> file here will contain our customized Horizon config.</p>
+</div>
+</div>
+<div class="slide" id="the-settings-file">
+<h2>The settings file</h2>
+<p>There are several key things you can customiz in your site&#8217;s settings file:</p>
+<ul>
+    <li class="slide">specifying custom dashboards and panels</li>
+    <li class="slide">catching your client&#8217;s exception classes</li>
+    <li class="slide">specifying a file for advanced
+overrides.</li>
+</ul>
+</div>
+
+<div class="slide" id="specifying-dashboards">
+<h2>Specifying dashboards</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">HORIZON_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;dashboards&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;nova&#39;</span><span class="p">,</span> <span class="s">&#39;syspanel&#39;</span><span class="p">,</span> <span class="s">&#39;<strong>visualizations</strong>&#39;</span><span class="p">,</span> <span class="s">&#39;settings&#39;</span><span class="p">,),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+</div>
+<div class="slide" id="error-handling">
+<h2>Error handling</h2>
+<p>Adding custom error handlers to <tt>HORIZON_CONFIG</tt> for your API client is easy:</p>
+<div class="highlight-python"><pre>import my_api.exceptions as my_api
+
+'exceptions': {'recoverable': [my_api.Error,
+                               my_api.ClientConnectionError],
+               'not_found': [my_api.NotFound],
+               'unauthorized': [my_api.NotAuthorized]},</pre>
+</div>
+</div>
+
+<div class="slide" id="override-file">
+<h2>Override file</h2>
+<p>The override file is the &#8220;god-mode&#8221; dashboard editor.</p>
+<p class="slide">Comes between the automatic discovery mechanisms and the final setup
+routines for the entire site.</p>
+<p class="slide">With great power comes great responsibility.</p>
+</div>
+<div class="slide">
+    <h2>How to specify an override file</h2>
+<p>To specify an override file, you set the <tt class="docutils literal"><span class="pre">'customization_module'</span></tt> value in
+the <tt class="docutils literal"><span class="pre">HORIZON_CONFIG</span></tt> dictionary to the dotted python path of your
+override module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">HORIZON_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;customization_module&#39;</span><span class="p">:</span> <span class="s">&#39;demo_dashboard.overrides&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="slide" id="conclusion">
+<h2>Conclusion</h2>
+<p class="slide">The cake was a lie.</p>
+<p class="slide">If you want to see the finished product, check out the github example
+referenced at the beginning of this tutorial and linked from the etherpad.</p>
+<p class="slide">What you&#8217;ve learned here are the fundamentals.</p>
+<p class="slide"><strong>Go forth and build!</strong></p>
+</div>
+
+<!-- deck.navigation snippet -->
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<!-- deck.status snippet -->
+<p class="deck-status">
+    <span class="deck-status-current"></span>
+    /
+    <span class="deck-status-total"></span>
+</p>
+
+<!-- deck.goto snippet -->
+<form action="." method="get" class="goto-form">
+    <label for="goto-slide">Go to slide:</label>
+    <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+    <datalist id="goto-datalist"></datalist>
+    <input type="submit" value="Go">
+</form>
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+<!-- Grab CDN jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="../../deck.js/jquery-1.7.min.js"></script>
+
+<!-- Deck Core and extensions -->
+<script src="../../deck.js/core/deck.core.js"></script>
+<script src="../../deck.js/extensions/hash/deck.hash.js"></script>
+<script src="../../deck.js/extensions/menu/deck.menu.js"></script>
+<script src="../../deck.js/extensions/goto/deck.goto.js"></script>
+<script src="../../deck.js/extensions/status/deck.status.js"></script>
+<script src="../../deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="../../deck.js/extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck -->
+<script>
+$(function() {
+    $.deck('.slide');
+});
+</script>
+
+</body>
+</html>

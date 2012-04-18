@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-strong {
+strong, .strong {
   color: #CF2F19;
 }
 
