@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Horizon Project Update | October 2012</title>
+
+    <meta name="author" content="Gabriel Hurley">
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <!-- Core and extension CSS files -->
+    <link rel="stylesheet" href="../../deck.js/core/deck.core.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/goto/deck.goto.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/menu/deck.menu.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/navigation/deck.navigation.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/status/deck.status.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/hash/deck.hash.css">
+    <link rel="stylesheet" href="../../deck.js/extensions/scale/deck.scale.css">
+
+    <!-- Style theme. More available in /themes/style/ or create your own. -->
+    <link rel="stylesheet" href="../openstack.theme.css">
+
+    <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+    <link rel="stylesheet" href="../../deck.js/themes/transition/horizontal-slide.css">
+
+    <script src="../../deck.js/modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<!-- Begin slides -->
+<section class="slide" id="title-slide">
+    <h1>Horizon Project Update</h1>
+    <h2>October 2012</h2>
+</section>
+
+<div class="slide" id="intro">
+    <h2>Horizon...</h2>
+    <ul>
+        <li class="slide">is the OpenStack Dashboard project</li>
+        <li class="slide">was first included as a Core project with the Essex release</li>
+        <li class="slide">has ~50 contributors from a diverse set of companies</li>
+        <li class="slide">is the ultimate consumer of every OpenStack API (we feel the pain)</li>
+    </ul>
+</div>
+
+<div class="slide" id="looking-back">
+    <h1>Looking back...</h1>
+</div>
+
+<div class="slide" id="quote">
+    <h2>&nbsp;</h2>
+    <blockquote>
+        <div>
+            <p>“Think simple” as my old master used to say - meaning reduce the whole of its parts into the simplest terms, getting back to first principles.</p>
+            <p class="attribution">—Frank Lloyd Wright</p>
+        </div>
+    </blockquote>
+</div>
+
+<div class="slide" id="first-principles">
+    <h2>First principles</h2>
+    <ul>
+        <li class="slide"><strong>Core Support</strong>: Out-of-the-box support for all core OpenStack projects.</li>
+        <li class="slide"><strong>Extensible</strong>: Anyone can add a new component as a “first-class citizen”.</li>
+        <li class="slide"><strong>Manageable</strong>: The core codebase should be simple and easy-to-navigate.</li>
+        <li class="slide"><strong>Consistent</strong>: Visual and interaction paradigms are maintained throughout.</li>
+        <li class="slide"><strong>Stable</strong>: A reliable API with an emphasis on backwards-compatibility.</li>
+        <li class="slide"><strong>Usable</strong>: Providing an awesome interface that people want to use.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>So how did we do?</h1>
+</div>
+
+<div class="slide" id="core-support">
+    <h2>Core Support</h2>
+    <ul>
+        <li class="slide">Full support for Nova, Swift, Glance, Keystone, Cinder</li>
+        <li class="slide">Added support for Quantum, will continue to improve (session thursday)</li>
+    </ul>
+</div>
+
+<div class="slide" id="extensibility">
+    <h2>Extensible</h2>
+    <ul>
+        <li class="slide">Transformed project from thousands of lines of copy-and-paste one-offs to a framework</li>
+        <li class="slide">Quantum support was added entirely by Quantum team</li>
+        <li class="slide">Heat and Ceilometer are both exploring Horizon integration</li>
+        <li class="slide">More work to be done, but we've come a long way</li>
+    </ul>
+</div>
+
+<div class="slide" id="managability">
+    <h2>Manageable</h2>
+    <ul>
+        <li class="slide">Logical structure for dashboards and panels</li>
+        <li class="slide">First commits in Grizzly cleaned up separation between framework "building blocks" and code for specific dashboards</li>
+    </ul>
+</div>
+
+<div class="slide" id="stability">
+    <h2>Stable</h2>
+    <ul>
+        <li class="slide">Folsom release is fully backwards-compatible with Essex stack</li>
+        <li class="slide">Very few changes for developers</li>
+        <li class="slide">Minimal settings changes for deployers to upgrade</li>
+    </ul>
+</div>
+
+<div class="slide" id="usability">
+    <h2>Usable</h2>
+    <ul>
+        <li class="slide">New "Workflows" in Folsom are a big step in the right direction</li>
+        <li class="slide">We can do better!</li>
+    </ul>
+</div>
+
+<div class="slide" id="what-does-it-mean">
+    <h1>What does it mean?</h1>
+</div>
+
+<div class="slide" id="present-capabilities">
+    <h2 class="vcenter">
+        <span>We present the capabilities of the OpenStack platform</span><br />
+        <small><small><small>(Useful but limited)</small></small></small></h2>
+</div>
+
+<div class="slide" id="iaas">
+    <h2 class="vcenter">Right now OpenStack Core is primarily IaaS&mdash;the dashboard reflects that</h2>
+</div>
+
+<div class="slide" id="platform">
+    <h2>We provide a platform for ecosystem projects</h2>
+    <ul>
+        <li class="slide">
+            <span>At the Essex summit we heard a lot of people asking "how do I add my project to Horizon?"</span>
+            <ul>
+                <li class="slide">We've answered that question in spades</li>
+            </ul>
+        </li>
+        <li class="slide">People are working on integration</li>
+        <li class="slide">We're not the bottleneck or the arbiter of "who gets included"</li>
+        <li class="slide">We offer guidance to projects and try to build common features they need</li>
+    </ul>
+</div>
+
+<div class="slide" id="near-future">
+    <h1>The (Near) Future</h1>
+</div>
+
+<div class="slide" id="grizzly">
+    <h2>Grizzly Themes</h2>
+    <ul>
+        <li class="slide">Making CRUD trivial (DRY like the desert)</li>
+        <li class="slide">More user-focused workflows</li>
+        <li class="slide">Great file upload interactions (swift, glance)</li>
+        <li class="slide">Great networking</li>
+    </ul>
+</div>
+
+<div class="slide" id="future-plus">
+    <h1>Future++</h1>
+</div>
+
+<div class="slide" id="ramping-up">
+
+    <h2>Ramping up the curve</h2>
+    <ul>
+        <li class="slide">
+            <span>New projects appearing more rapidly, providing exciting new capabilities</span>
+            <ul>
+                <li class="slide">Ceilometer, Heat, Synapse, CQS/CNS... the list goes on</li>
+            </ul>
+        </li>
+        <li class="slide">Constructing the most useful integrated workflows is key.</li>
+    </ul>
+</div>
+
+<div class="slide" id="paas-saas">
+    <h2>PaaS, Saas...</h2>
+    <ul>
+        <li class="slide">Competing nascent solutions <small>(<em>CloudFoundry, Heat, OpenShift, etc.</em>)</small></li>
+        <li class="slide">
+            <span>No standardization/consensus yet</span>
+            <ul>
+                <li class="slide">There doesn't have to be one winner if they're interoperable</li>
+            </ul>
+        </li>
+        <li class="slide">We'll support it the moment the community gets there</li>
+        <li class="slide">This is the future, and it's an exciting one!</li>
+    </ul>
+</div>
+
+<div class="slide" id="contextual">
+    <h2>Useful for diverse audiences (flexibly)</h2>
+    <ul>
+        <li class="slide"><strong>Basic users</strong>: Obvious workflows, Up-and-running fast vs. lots of choices</li>
+
+        <li class="slide"><strong>Project administrators</strong>: Supporting end users in their project, Monitoring and managing resources</li>
+
+        <li class="slide"><strong>Cloud administrators</strong>: Overall system utilization, Cloud-scale management interfaces</li>
+
+        <li class="slide"><strong>"Executives"</strong>: Simple overviews, Solid reporting</li>
+    </ul>
+</div>
+
+<div class="slide" id="more-capabilities">
+    <h2>More capabilities at your fingertips</h2>
+    <ul>
+        <li class="slide">Improved console/virtual desktop experience</li>
+        <li class="slide">Better visualizations</li>
+        <li class="slide">Real-time event-driven interaction</li>
+        <li class="slide">Integration with new and existing projects and services that people want to use</li>
+    </ul>
+</div>
+
+<div class="slide" id="challenges">
+    <h2>Challenges</h2>
+    <ul>
+        <li class="slide">Cross-project commonality for API features, data structures, etc.</li>
+        <li class="slide">Cross-project event-driven notification system</li>
+        <li class="slide">
+            <span>Design</span>
+            <ul>
+                <li class="slide">Most common problem of any open source project</li>
+                <li class="slide">Great contributors adding features right now...</li>
+                <li class="slide"><strong>Time to make Horizon "sexy"!</strong></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="slide" id="thank-you">
+    <h1 class="vcenter">Thank You!</h1>
+    <h4 style="float:right; text-align:right;">
+        <span>Gabriel Hurley</span><br/>
+        <span>Nebula Inc</span><br/>
+        <span>@gabrielhurley</span><br/>
+        <span>gabriel@strikeawe.com</span><br/>
+    </h4>
+</div>
+
+
+<!-- deck.navigation snippet -->
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<!-- deck.status snippet -->
+<p class="deck-status">
+    <span class="deck-status-current"></span>
+    /
+    <span class="deck-status-total"></span>
+</p>
+
+<!-- deck.goto snippet -->
+<form action="." method="get" class="goto-form">
+    <label for="goto-slide">Go to slide:</label>
+    <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+    <datalist id="goto-datalist"></datalist>
+    <input type="submit" value="Go">
+</form>
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+<!-- Grab CDN jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="../../deck.js/jquery-1.7.min.js"></script>
+
+<!-- Deck Core and extensions -->
+<script src="../../deck.js/core/deck.core.js"></script>
+<script src="../../deck.js/extensions/hash/deck.hash.js"></script>
+<script src="../../deck.js/extensions/menu/deck.menu.js"></script>
+<script src="../../deck.js/extensions/goto/deck.goto.js"></script>
+<script src="../../deck.js/extensions/status/deck.status.js"></script>
+<script src="../../deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="../../deck.js/extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck -->
+<script>
+$(function() {
+    $.deck('.slide');
+});
+</script>
+
+</body>
+</html>
