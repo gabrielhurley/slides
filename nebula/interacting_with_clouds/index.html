@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Interacting with Clouds</title>
+
+        <meta name="description" content="A primer on how interface design shapes your cloudy world.">
+        <meta name="author" content="Gabriel Hurley">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <link rel="stylesheet" href="../../reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="../../reveal.js/css/theme/default.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="../../reveal.js/lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="../../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section>
+                    <h1 style="text-align: center;">
+                        <font face="helvetica">Interacting with Clouds</font>
+                    </h1>
+                </section>
+                <section>
+                    <h2>About Me (Gabriel Hurley)</h2>
+                    <div>
+                        <ul>
+                            <li>Senior Developer at Nebula Inc</li>
+                            <li>Front End Engineer</li>
+                            <li>Project Technical Lead for the OpenStack Dashboard</li>
+                            <li>Core committer for Django (Python web framework)</li>
+                            <li>
+                                <i>I fight for the user!</i>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <section>
+                        <h2>Four Example Users</h2>
+                        <div>
+                            <ol>
+                                <li>End User</li>
+                                <li>Team/Project Administrator</li>
+                                <li>Cloud Administrator</li>
+                                <li>Executive</li>
+                            </ol>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>End User</h2>
+                        <div>
+                            <ul>
+                                <li>Slightly technical<br>
+                                </li>
+                                <li>Trying to get their job done (their job <i>is not </i>the cloud)<br>
+                                </li>
+                                <li>Cloud means they don't have to wait six months for a server from procurement<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Team/Project administrator</h2>
+                        <div>
+                            <ul>
+                                <li>Moderately technical</li>
+                                <li>Focused on enabling their team<br>
+                                </li>
+                                <li>Cloud means they have autonomous control over their allotted resources<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Cloud administrator</h2>
+                        <div>
+                            <ul>
+                                <li>Highly technical<br>
+                                </li>
+                                <li>Ensuring the stability and performance of the system<br>
+                                </li>
+                                <li>Cloud <i>is</i> their job<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Executive</h2>
+                        <div>
+                            <ul>
+                                <li>Not technical<br>
+                                </li>
+                                <li>Interested in discerning value and finding at-a-glance meaning<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h2>Your interface says a lot about you...</h2>
+                    <div>
+                        <br>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>CLIs?</li>
+                            <li>APIs?</li>
+                            <li>Dashboards?</li>
+                            <li>Mobile/Apps?</li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <section>
+                        <h2>Command Line Interfaces</h2>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Often the most powerful/expressive</li>
+                                    <li>Great for scripting</li>
+                                    <li>Arcane (and poorly documented)</li>
+                                    <li>Intimidate, discourage and frustrate users</li>
+                                    <li>Often end up restricting their audiences</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>CLIS Don't Scale</h2>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Discoverability is very low</li>
+                                    <li>Lists only work for a few elements</li>
+                                    <li>At cloud-scale you mostly have machine-generated IDs</li>
+                                    <li>Interaction is limited by the nature of a command line</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For Users</h2>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Copy-and-paste commands from Google searches that they mostly don't understand</li>
+                                    <li>CLIs get the job done, but they're frustrating</li>
+                                    <li>Why are they frustrating? Low discoverability and documentation that's overwhelming or over their head</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For project administrators</h2>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>CLIs provide the expressive power that's sometimes needed to accomplish deeper, less repetitive tasks</li>
+                                    <li>Still not the preferred tool due to complexity</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For cloud administrators</h2>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Often the only way to get every last bit of control</li>
+                                    <li>Can be scripted into automated jobs</li>
+                                    <li>Requires investment of time to understand/master... but this is their job</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For executives</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Absolutely useless.</div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <i>you really think they're gonna open a shell prompt? ;-)</i>
+                            <br>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>What could be improved?</h2>
+                        <div>Imagine a highly-interactive CLI...<br>
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Type-ahead autocompletion of commands</li>
+                                    <li>Helpful doc strings with examples for every command</li>
+                                    <li>Layered documentation that can be broad <i>or</i> detailed</li>
+                                    <li>Autocompletion of names &amp; ids</li>
+                                    <li>Meaningful colored output</li>
+                                    <li>"Shortcut" commands that trade power for ease-of-use</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>APIs (The RESTFUL Kind)</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Underly everything else (CLIs, dashboards, etc.)<br>
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <i>Good design is critical!</i>
+                            <br>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Your API is your limiting factor</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Everything anyone builds will be based on your API!</div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>And yet they're often an afterthought</li>
+                                    <li>They're built by developers for internal needs without thinking about consumers</li>
+                                    <li>They do "just enough" and no more</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Important things nobody considers</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Filtering</li>
+                                    <li>Ordering</li>
+                                    <li>Pagination</li>
+                                    <li>Fetching related data</li>
+                                    <li>Self-description (critical for federation)</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For users</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Need CLI tools or clients to interact with them</li>
+                                    <li>Easier to use than CLIs because you can use your language of choice</li>
+                                    <li>Just as badly documented as CLIs</li>
+                                    <li>Often missing capabilities that make integration infuriating</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For project administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Same as for users, but perhaps less likely to need to integrate<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For cloud administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Probably gonna just script things through the CLI or use a pre-existing tool</li>
+                                    <li>Sometimes build tools (and hopefully release them!)</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For executives</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Still useless.</div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <i>Unless the API is awesome and people have already built tools for it...</i>
+                            <br>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Dashboards</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Built on APIs!<br>
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Drastically increase discovery.</div>
+                    </section>
+                    <section>
+                        <h2>How do you see the world?</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Dashbaords frequently take a "resource-oriented" view of the world.<br>
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Here are your servers, your volumes, etc.</li>
+                                    <li>Cover simple infrastructure management tasks</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For users</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Don't care about the specific instances, volumes; they want to get something done</li>
+                                    <li>Focus on workloads, applications, etc.</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For project administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Need good overviews and utilization information</li>
+                                    <li>Easy management tools</li>
+                                    <li>Properly scoped interfaces</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For cloud administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Lists are useless at "cloud scale"</li>
+                                    <li>Filtering is a start</li>
+                                    <li>Clustering is better</li>
+                                    <li>The API's the limit</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For executives</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Visualizations are key</li>
+                                    <li>Distillation of knowledge</li>
+                                    <li>Metrics, reporting and auditing</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Mobile</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>CLIs... lol.<br>
+                        </div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>APIs... not likely.</div>
+                        <div>
+                            <br>
+                        </div>
+                        <div>Dashboards and Apps... yeah!</div>
+                    </section>
+                    <section>
+                        <h2>All about at-a-glance meaning</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Progress/status of workloads</li>
+                                    <li>Monitoring health</li>
+                                    <li>Visualization</li>
+                                    <li>Identifying problems</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For users</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Nice-to-have if they exist</li>
+                                    <li>Primarily useful for progress indication, "done" notifications, retriggering jobs</li>
+                                    <li>Not likely to do advanced configuration of workloads on mobile</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For project administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Quick management interface (add a user, increase a quota, etc.)</li>
+                                    <li>Quick utilization visualization</li>
+                                    <li>Problem reporting/resource allocation requesting ("going up the chain")</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For cloud administrators</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>All about seeing utilization and health</li>
+                                    <li>Must be able to spot outliers (problems)</li>
+                                    <li>Respond to basic management requests</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>For executives</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Pretty graphs</li>
+                                <li>Roll-up reporting<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Closing Thoughts &amp; Common themes</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>How do you identify problems in a cloud?<br>
+                                </li>
+                                <li>What do you do when something goes wrong?<br>
+                                </li>
+                                <li>How do you learn?<br>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Finding Problems</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Monitoring systems</li>
+                                    <li>Proactive notification</li>
+                                    <li>Visualization</li>
+                                    <li>Outlier detection</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Dealing with problems</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Use a virtual console/remote desktop to check on it</li>
+                                    <li>SSH in and poke at it</li>
+                                    <li>Kill it and start over..</li>
+                                    <li>
+                                        <i>How much (if any) setup was done by hand?</i>
+                                    </li>
+                                    <li>
+                                        <i>Was data persisted or can it be rebuilt?</i>
+                                    </li>
+                                    <li>
+                                        <i>How long will it take to get back to running?</i>
+                                    </li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Learning (The Hard Part)</h2>
+                        <div>
+                            <br>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <li>Need better discoverability</li>
+                                    <li>Need better documentation</li>
+                                    <li>Need clearer terminology</li>
+                                    <li>Need ready access to help</li>
+                                    <li>Teach a man to fish...</li>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h2>Thanks!</h2>
+                    <div>
+                        <br>
+                    </div>
+                    <div>
+                        <b>Gabriel Hurley</b>
+                    </div>
+                    <div>gabriel.hurley@nebula.com</div>
+                    <div>
+                        <i>@gabrielhurley</i>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+        <script src="../../reveal.js/lib/js/head.min.js"></script>
+        <script src="../../reveal.js/js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: '../../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: '../../reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: '../../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: '../../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
